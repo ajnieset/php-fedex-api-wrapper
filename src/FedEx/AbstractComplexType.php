@@ -75,12 +75,19 @@ abstract class AbstractComplexType
         if ($reflectionClass->hasMethod($setterMethodName)) {
             $reflectionNamedType = $reflectionClass->getMethod($setterMethodName)->getParameters()[0]->getType();
             /* @var $reflectionNamedType ReflectionNamedType */
-            $parameterClassName = $reflectionNamedType->getName();
+            // $parameterClassName = $reflectionNamedType->getName();
+            if ($reflectionNamedType !== NULL) {
+                $parameterClassName = $reflectionNamedType->getName();
 
-            if (class_exists($parameterClassName)) {
-                $this->$setterMethodName(new $parameterClassName);
-                return $this->values[$name];
+                if (class_exists($parameterClassName)) {
+                    $this->$setterMethodName(new $parameterClassName);
+                    return $this->values[$name];
+                }
             }
+            // if (class_exists($parameterClassName)) {
+            //     $this->$setterMethodName(new $parameterClassName);
+            //     return $this->values[$name];
+            // }
         }
 
         return $nullValue;
